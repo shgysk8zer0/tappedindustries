@@ -1,0 +1,22 @@
+@charset "UTF-8";
+@import url("./vars.css");
+@import url("https://cdn.kernvalley.us/css/normalize/normalize.css");
+@import url("https://cdn.kernvalley.us/css/core-css/rem.css");
+@import url("https://cdn.kernvalley.us/css/core-css/viewport.css");
+@import url("https://cdn.kernvalley.us/css/core-css/element.css");
+@import url("https://cdn.kernvalley.us/css/core-css/class-rules.css");
+@import url("https://cdn.kernvalley.us/css/core-css/cdn-fonts.css");
+@import url("https://cdn.kernvalley.us/css/animate.css/animate.css");
+@import url("https://cdn.kernvalley.us/css/core-css/animations.css");
+@import url("https://cdn.kernvalley.us/css/core-css/scrollbar.css");
+@import url("https://cdn.kernvalley.us/css/core-css/accordion.css");
+@import url("./layout.css");
+
+img.avatar {
+	vertical-align: middle;
+	margin-left: 1.2em;
+}
+
+.full-width {
+	width: 100%;
+}
