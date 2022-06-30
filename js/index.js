@@ -67,7 +67,7 @@ Promise.all([
 	);
 
 	document.getElementById('main').replaceChildren(
-		new HTMLLeafletMapElement({ crossOrigin: 'anonymous', detectRetina: true })
+		new HTMLLeafletMapElement({ crossOrigin: 'anonymous', detectRetina: true, zoomControl: true })
 	);
 
 	getJSON('/api/geo').then(items => {
