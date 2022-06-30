@@ -8,6 +8,7 @@ import 'https://cdn.kernvalley.us/components/github/user.js';
 import 'https://cdn.kernvalley.us/components/app/stores.js';
 import 'https://cdn.kernvalley.us/components/leaflet/map.js';
 import 'https://cdn.kernvalley.us/components/leaflet/marker.js';
+import { getJSON } from 'https://cdn.kernvalley.us/js/std-js/http.js';
 import { TILES } from 'https://cdn.kernvalley.us/components/leaflet/tiles.js';
 import { ready, loaded, toggleClass, on, create } from 'https://cdn.kernvalley.us/js/std-js/dom.js';
 import { getCustomElement } from 'https://cdn.kernvalley.us/js/std-js/custom-elements.js';
@@ -43,8 +44,9 @@ if (typeof GA === 'string') {
 Promise.all([
 	getCustomElement('install-prompt'),
 	getCustomElement('leaflet-map'),
+	getCustomElement('leaflet-marker'),
 	ready(),
-]).then(([HTMLInstallPromptElement, HTMLLeafletMapElement]) => {
+]).then(([HTMLInstallPromptElement, HTMLLeafletMapElement, HTMLLeafletMarkerElement]) => {
 	init();
 
 	document.getElementById('nav').replaceChildren(
@@ -67,6 +69,29 @@ Promise.all([
 	document.getElementById('main').replaceChildren(
 		new HTMLLeafletMapElement({ crossOrigin: 'anonymous', detectRetina: true })
 	);
+
+	getJSON('/api/geo').then(items => {
+		const map = document.querySelector('leaflet-map');
+		const [{ coords: { latitude, longitude }}] = items;
+		const sanitizer = new Sanitizer();
+		map.center = { latitude, longitude };
+		map.append(...items.map(({ uuid, coords, timestamp, battery, }) => {
+			const marker = new HTMLLeafletMarkerElement(coords);
+			const content = document.createElement('div');
+			const date = new Date(timestamp);
+			content.setHTML(`
+				<h3>Sample Data</h3>
+				<b>Latitude:</b> ${latitude}<br>
+				<b>Longitude:</b> ${longitude}<br>
+				<b>Batter:</b> ${battery}%<br>
+				<b>DateTime</b>: <time datetime="${date.toISOString()}">${date.toLocaleString()}</time>
+			`, { sanitizer });
+			content.slot = 'popup';
+			marker.id = uuid;
+			marker.append(content);
+			return marker;
+		}));
+	});
 
 	on('#install-btn', ['click'], () => new HTMLInstallPromptElement().show())
 		.forEach(el => el.hidden = false);

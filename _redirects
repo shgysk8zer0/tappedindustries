@@ -1,2 +1,2 @@
-/api/v1/geo		/.netlify/functions/geo	200
+/api/geo		/.netlify/functions/geo	200
 #/.well-known/change-password	/forgot-password/	301!

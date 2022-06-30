@@ -3,40 +3,71 @@
 exports.handler = async function(event) {
 	console.log(event);
 	switch(event.httpMethod.toLowerCase()) {
+		case 'get': {
+			// const timestamp = Date.now();
+			// const { initializeApp } = require('firebase-admin/app');
+			// const { getFirestore } = require('firebase-admin/firestore');
+			// initializeApp({
+			// 	apiKey: process.env.apiKey,
+			// 	authDomain: 'cattle-tracking-app.firebaseapp.com',
+			// 	projectId: 'cattle-tracking-app',
+			// 	storageBucket: 'cattle-tracking-app.appspot.com',
+			// 	messagingSenderId: process.env.messagingSenderId,
+			// 	appId: process.env.appId,
+			// });
+			// const db = getFirestore();
+			const { v4: uuidv4 } = require('uuid');
+			return {
+				statusCode: 200,
+				body: JSON.stringify([{
+					uuid: uuidv4(),
+					timestamp: Date.now(),
+					coords: {
+						latitude: 121.487685,
+						longitude: 24.9965568,
+					},
+					battery: 67,
+					report_type: 2,
+					gps_status: 2,
+				}]),
+			};
+		}
+
 		case 'post': {
 			try {
-				const { initializeApp } = require('firebase-admin/app');
+				const body = JSON.parse(event.body);
+				const timestamp = Date.now();
+				// const { initializeApp } = require('firebase-admin/app');
 				// const { getFirestore } = require('firebase-admin/firestore');
+				// initializeApp({
+				// 	apiKey: process.env.apiKey,
+				// 	authDomain: 'cattle-tracking-app.firebaseapp.com',
+				// 	projectId: 'cattle-tracking-app',
+				// 	storageBucket: 'cattle-tracking-app.appspot.com',
+				// 	messagingSenderId: process.env.messagingSenderId,
+				// 	appId: process.env.appId,
+				// });
 				// const db = getFirestore();
-				initializeApp({
-					apiKey: process.env.apiKey,
-					authDomain: 'cattle-tracking-app.firebaseapp.com',
-					projectId: 'cattle-tracking-app',
-					storageBucket: 'cattle-tracking-app.appspot.com',
-					messagingSenderId: process.env.messagingSenderId,
-					appId: process.env.appId,
-				});
 
 				// await db.collection('users').doc('aturing').set({
 				// 	timestamp: Date.now(),
 				//  });
 				return {
-					status: 200,
+					statusCode: 200,
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify(event),
+					body: JSON.stringify({ body, timestamp }),
 				};
 			} catch(err) {
 				console.error(err);
-				return { status: 500, body: err.mesage };
+				return { statusCode: 500, body: { error: err.mesage }};
 			}
 		}
 
-		case 'get':
-		case 'put':
 		case 'delete':
-			return { status: 501 };
+		case 'put':
+			return { statusCode: 501 };
 
 		default:
-			return { status: 405 };
+			return { statusCode: 405 };
 	}
 };
