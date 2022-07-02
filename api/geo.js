@@ -1,38 +1,50 @@
 /* eslint-env node */
 
+function getApp() {
+	if (typeof process.env.serviceAccount !== 'string') {
+		throw new Error('No Service Account set in `process.env`');
+	} else {
+		const { initializeApp, cert } = require('firebase-admin/app');
+		const serviceAccount = JSON.parse(process.env.serviceAccount);
+		const app = initializeApp({
+			credential: cert(serviceAccount),
+		}, 'temp-' + Date.now());
+
+		return app;
+	}
+}
+
 exports.handler = async function(event) {
 	switch(event.httpMethod.toLowerCase()) {
 		case 'get': {
-			// const timestamp = Date.now();
-			const { initializeApp } = require('firebase-admin/app');
-			const { getFirestore } = require('firebase-admin/firestore');
-			// const app = initializeApp({
-			// 	apiKey: process.env.apiKey,
-			// 	authDomain: 'cattle-tracking-app.firebaseapp.com',
-			// 	projectId: 'cattle-tracking-app',
-			// 	storageBucket: 'cattle-tracking-app.appspot.com',
-			// 	messagingSenderId: process.env.messagingSenderId,
-			// 	appId: process.env.appId,
-			// });
-			const { apiKey, authDomain, projectId, storageBucket, messagingSenderId, appId } = require('./creds.js');
-			const app = initializeApp({ apiKey, authDomain, projectId, storageBucket, messagingSenderId, appId });
-			const db = getFirestore(app);
-			const entries = await db.collection('geo').get();
-			return {
-				statusCode: 200,
-				body: JSON.stringify(entries.map(doc => ({ uuid: doc.id, ...doc.data() }))),
-			};
+			try {
+				const app = getApp();
+				const { getFirestore } = require('firebase-admin/firestore');
+				const db = getFirestore(app);
+				const entries = await db.collection('geo').get();
+
+				return {
+					statusCode: 200,
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(entries.map(doc => ({ uuid: doc.id, ...doc.data() }))),
+				};
+			} catch(err) {
+				console.error(err);
+				return {
+					statusCode: 500,
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ error: err.message }),
+				};
+			}
 		}
 
 		case 'post': {
 			try {
+				const { getFirestore } = require('firebase-admin/firestore');
+				const db = getFirestore(app);
 				const body = JSON.parse(event.body);
 				const { v4: uuidv4 } = require('uuid');
-				const { initializeApp } = require('firebase-admin/app');
-				const { getFirestore } = require('firebase-admin/firestore');
-				const { apiKey, authDomain, projectId, storageBucket, messagingSenderId, appId } = require('./creds.js');
-				const app = initializeApp({ apiKey, authDomain, projectId, storageBucket, messagingSenderId, appId });
-				const db = getFirestore(app);
+				const app = getApp();
 
 				await db.collection('geo').doc(uuidv4()).set({
 					timestamp: Date.now(),
@@ -46,7 +58,10 @@ exports.handler = async function(event) {
 				};
 			} catch(err) {
 				console.error(err);
-				return { statusCode: 500, body: { error: err.mesage }};
+				return {
+					statusCode: 500,
+					body: JSON.stringify({ error: err.message }),
+				};
 			}
 		}
 
