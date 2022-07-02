@@ -1,13 +1,12 @@
 /* eslint-env node */
 
 exports.handler = async function(event) {
-	console.log(event);
 	switch(event.httpMethod.toLowerCase()) {
 		case 'get': {
 			// const timestamp = Date.now();
-			// const { initializeApp } = require('firebase-admin/app');
-			// const { getFirestore } = require('firebase-admin/firestore');
-			// initializeApp({
+			const { initializeApp } = require('firebase-admin/app');
+			const { getFirestore } = require('firebase-admin/firestore');
+			// const app = initializeApp({
 			// 	apiKey: process.env.apiKey,
 			// 	authDomain: 'cattle-tracking-app.firebaseapp.com',
 			// 	projectId: 'cattle-tracking-app',
@@ -15,43 +14,31 @@ exports.handler = async function(event) {
 			// 	messagingSenderId: process.env.messagingSenderId,
 			// 	appId: process.env.appId,
 			// });
-			// const db = getFirestore();
-			const { v4: uuidv4 } = require('uuid');
+			const { apiKey, authDomain, projectId, storageBucket, messagingSenderId, appId } = require('./creds.js');
+			const app = initializeApp({ apiKey, authDomain, projectId, storageBucket, messagingSenderId, appId });
+			const db = getFirestore(app);
+			const entries = await db.collection('geo').get();
 			return {
 				statusCode: 200,
-				body: JSON.stringify([{
-					uuid: uuidv4(),
-					timestamp: Date.now(),
-					coords: {
-						latitude: 121.487685,
-						longitude: 24.9965568,
-					},
-					battery: 67,
-					report_type: 2,
-					gps_status: 2,
-				}]),
+				body: JSON.stringify(entries.map(doc => ({ uuid: doc.id, ...doc.data() }))),
 			};
 		}
 
 		case 'post': {
 			try {
 				const body = JSON.parse(event.body);
-				const timestamp = Date.now();
-				// const { initializeApp } = require('firebase-admin/app');
-				// const { getFirestore } = require('firebase-admin/firestore');
-				// initializeApp({
-				// 	apiKey: process.env.apiKey,
-				// 	authDomain: 'cattle-tracking-app.firebaseapp.com',
-				// 	projectId: 'cattle-tracking-app',
-				// 	storageBucket: 'cattle-tracking-app.appspot.com',
-				// 	messagingSenderId: process.env.messagingSenderId,
-				// 	appId: process.env.appId,
-				// });
-				// const db = getFirestore();
+				const { v4: uuidv4 } = require('uuid');
+				const { initializeApp } = require('firebase-admin/app');
+				const { getFirestore } = require('firebase-admin/firestore');
+				const { apiKey, authDomain, projectId, storageBucket, messagingSenderId, appId } = require('./creds.js');
+				const app = initializeApp({ apiKey, authDomain, projectId, storageBucket, messagingSenderId, appId });
+				const db = getFirestore(app);
 
-				// await db.collection('users').doc('aturing').set({
-				// 	timestamp: Date.now(),
-				//  });
+				await db.collection('geo').doc(uuidv4()).set({
+					timestamp: Date.now(),
+					body: body,
+				});
+
 				return {
 					statusCode: 200,
 					headers: { 'Content-Type': 'application/json' },
