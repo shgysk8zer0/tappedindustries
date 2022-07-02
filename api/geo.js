@@ -41,10 +41,10 @@ exports.handler = async function(event) {
 		case 'post': {
 			try {
 				const { getFirestore } = require('firebase-admin/firestore');
+				const app = getApp();
 				const db = getFirestore(app);
 				const body = JSON.parse(event.body);
 				const { v4: uuidv4 } = require('uuid');
-				const app = getApp();
 
 				await db.collection('geo').doc(uuidv4()).set({
 					timestamp: Date.now(),
