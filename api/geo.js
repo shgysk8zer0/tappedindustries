@@ -1,5 +1,10 @@
 /* eslint-env node */
 
+function getTimestamp(ts = Date.now(), ns = 0) {
+	const { Timestamp } = require('firebase-admin/firestore');
+	return new Timestamp(ts, ns);
+}
+
 function getApp() {
 	if (typeof process.env.serviceAccount !== 'string') {
 		throw new Error('No Service Account set in `process.env`');
@@ -27,6 +32,7 @@ exports.handler = async function(event) {
 				docs.forEach(doc => {
 					const uuid = doc.id;
 					const data = doc.data();
+
 					if (typeof data.coords === 'object') {
 						entries.push({
 							uuid,
@@ -34,6 +40,7 @@ exports.handler = async function(event) {
 							timestamp: data.timestamp._seconds,
 							gps_status: data.gps_status,
 							report_type: data.report_type,
+							tracker_id: data.tracker_id,
 							coords: {
 								latitude: data.coords._latitude,
 								longitude: data.coords._longitude,
@@ -60,11 +67,13 @@ exports.handler = async function(event) {
 		case 'post': {
 			try {
 				const { getFirestore } = require('firebase-admin/firestore');
+				// const { getFirestore, GeoPoint } = require('firebase-admin/firestore');
 				const app = getApp();
-				const timestamp = Date.now();
 				const db = getFirestore(app);
 				const body = JSON.parse(event.body);
 				const { v4: uuidv4 } = require('uuid');
+				// const coords = new GeoPoint(latitude, longitude);
+				const timestamp = getTimestamp();
 
 				await db.collection('geo').doc(uuidv4()).set({ timestamp, body });
 

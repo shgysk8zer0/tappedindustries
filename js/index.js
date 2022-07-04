@@ -82,12 +82,13 @@ Promise.all([
 		map.center = { latitude, longitude };
 		map.append(
 			...items.filter(({ coords }) => typeof coords === 'object')
-				.map(({ uuid, coords, timestamp, battery, }) => {
+				.map(({ uuid, coords, timestamp, battery, tracker_id, }) => {
 					const marker = new HTMLLeafletMarkerElement(coords);
 					const content = document.createElement('div');
 					const date = new Date(timestamp * 1000);
 					content.setHTML(`
 						<h3>Sample Data</h3>
+						<b>Tracker ID:</b> <span>${tracker_id}</span><br>
 						<b>Latitude:</b> <span>${latitude}</span><br>
 						<b>Longitude:</b> <span>${longitude}</span><br>
 						<b>Battery:</b> <span>${battery}</span>%<br>
