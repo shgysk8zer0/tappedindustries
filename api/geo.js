@@ -21,12 +21,31 @@ exports.handler = async function(event) {
 				const app = getApp();
 				const { getFirestore } = require('firebase-admin/firestore');
 				const db = getFirestore(app);
-				const entries = await db.collection('geo').get();
+				const docs = await db.collection('geo').get();
+				// `docs.map()` won't work
+				const entries = [];
+				docs.forEach(doc => {
+					const uuid = doc.id;
+					const data = doc.data();
+					if (typeof data.coords === 'object') {
+						entries.push({
+							uuid,
+							battery: data.battery,
+							timestamp: data.timestamp._seconds,
+							gps_status: data.gps_status,
+							report_type: data.report_type,
+							coords: {
+								latitude: data.coords._latitude,
+								longitude: data.coords._longitude,
+							},
+						});
+					}
+				});
 
 				return {
 					statusCode: 200,
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify(entries.map(doc => ({ uuid: doc.id, ...doc.data() }))),
+					body: JSON.stringify(entries),
 				};
 			} catch(err) {
 				console.error(err);
@@ -42,14 +61,12 @@ exports.handler = async function(event) {
 			try {
 				const { getFirestore } = require('firebase-admin/firestore');
 				const app = getApp();
+				const timestamp = Date.now();
 				const db = getFirestore(app);
 				const body = JSON.parse(event.body);
 				const { v4: uuidv4 } = require('uuid');
 
-				await db.collection('geo').doc(uuidv4()).set({
-					timestamp: Date.now(),
-					body: body,
-				});
+				await db.collection('geo').doc(uuidv4()).set({ timestamp, body });
 
 				return {
 					statusCode: 200,
