@@ -50,10 +50,10 @@ Promise.all([
 ]).then(([HTMLInstallPromptElement, HTMLLeafletMapElement, HTMLLeafletMarkerElement]) => {
 	init();
 
-	document.getElementById('nav').replaceChildren(
+	document.getElementById('logo').after(
 		...Object.entries(TILES).map(([key, { tileSrc, attribution }], i) => create('button', {
-			text: `${key} [${i}]`,
-			accesskey: i,
+			text: `${key} [${(i + 1).toString()}]`,
+			accesskey: (i + 1).toString(),
 			classList: ['btn', 'btn-primary', 'capitalize'],
 			dataset: { tileSrc, attribution },
 			events: {
@@ -94,6 +94,7 @@ Promise.all([
 						<b>Battery:</b> <span>${battery}</span>%<br>
 						<b>DateTime</b>: <time datetime="${date.toISOString()}">${date.toLocaleString()}</time>
 					`, { sanitizer });
+
 					content.slot = 'popup';
 					marker.id = uuid;
 					marker.append(content);
@@ -122,6 +123,7 @@ Promise.all([
 				}),
 			]
 		});
+
 		document.body.append(dialog);
 		dialog.showModal();
 	});

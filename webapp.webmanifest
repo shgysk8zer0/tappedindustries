@@ -1,29 +1,19 @@
 {
-  "name": "static template",
-  "short_name": "static",
-  "version": "1.1.0",
+  "name": "Tapped Industries Cattle Tracking Prototype",
+  "short_name": "TappedIndustries",
+  "version": "1.0.0",
   "lang": "en",
   "dir": "ltr",
-  "description": "A template repository for static sites, including skeleton JS, CSS, SVGs, fonts, etc.",
+  "description": "A prototype of a cattle tracking app for Tapped Industries",
   "orientation": "any",
   "start_url": "/",
   "theme_color": "#007bff",
   "background_color": "#242424",
   "display": "standalone",
   "icons": [{
-    "src": "/img/favicon.svg",
+    "src": "/img/logo.svg",
     "sizes": "192x192",
     "type": "image/svg+xml",
-    "purpose": "any maskable"
-  }, {
-    "src": "/img/icon-192.png",
-    "sizes": "192x192",
-    "type": "image/png",
-    "purpose": "any maskable"
-  }, {
-    "src": "/img/icon-512.png",
-    "sizes": "512x512",
-    "type": "image/png",
     "purpose": "any maskable"
   }],
   "screenshots": [{
@@ -54,6 +44,15 @@
   "related_applications": [{
     "platform": "webapp",
     "url": "/webapp.webmanifest"
+  }, {
+    "platform": "play",
+    "url": "/#"
+  }, {
+    "platform": "itunes",
+    "url": "/#"
+  }, {
+    "platform": "windows",
+    "url": "/#"
   }],
   "developer": {
 		"name": "Chris Zuber",
