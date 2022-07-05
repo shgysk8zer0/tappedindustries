@@ -64,6 +64,7 @@ exports.handler = async function(event) {
 			}
 		}
 
+		case 'put':
 		case 'post': {
 			try {
 				const { getFirestore } = require('firebase-admin/firestore');
@@ -92,7 +93,7 @@ exports.handler = async function(event) {
 		}
 
 		case 'delete':
-		case 'put':
+		// case 'put':
 			return { statusCode: 501 };
 
 		default:

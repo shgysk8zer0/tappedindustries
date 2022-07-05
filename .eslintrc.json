@@ -39,6 +39,6 @@
       "cookieStore": "readonly",
       "showOpenFilePicker": "readonly",
       "showSaveFilePicker": "readonly",
-      "Sanitizer": "readonly",
+      "Sanitizer": "readonly"
     }
 }
