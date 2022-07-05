@@ -13,7 +13,6 @@ import { getJSON } from 'https://cdn.kernvalley.us/js/std-js/http.js';
 import { TILES } from 'https://cdn.kernvalley.us/components/leaflet/tiles.js';
 import { ready, loaded, toggleClass, on, create } from 'https://cdn.kernvalley.us/js/std-js/dom.js';
 import { getCustomElement } from 'https://cdn.kernvalley.us/js/std-js/custom-elements.js';
-import { init } from 'https://cdn.kernvalley.us/js/std-js/data-handlers.js';
 import { importGa, externalHandler, telHandler, mailtoHandler } from 'https://cdn.kernvalley.us/js/std-js/google-analytics.js';
 import { GA } from './consts.js';
 
@@ -48,8 +47,6 @@ Promise.all([
 	getCustomElement('leaflet-marker'),
 	ready(),
 ]).then(([HTMLInstallPromptElement, HTMLLeafletMapElement, HTMLLeafletMarkerElement]) => {
-	init();
-
 	document.getElementById('logo').after(
 		...Object.entries(TILES).map(([key, { tileSrc, attribution }], i) => create('button', {
 			text: `${key} [${(i + 1).toString()}]`,
@@ -88,6 +85,9 @@ Promise.all([
 					const date = new Date(timestamp * 1000);
 					content.setHTML(`
 						<h3>Sample Data</h3>
+						<center>
+							<img src="https://cdn.kernvalley.us/img/raster/missing-image.png" height="160" width="320" loading="lazy" alt="" crossorigin="anonymous" referrerpolicy="no-referrer" />
+						</center>
 						<b>Tracker ID:</b> <span>${tracker_id}</span><br>
 						<b>Latitude:</b> <span>${latitude}</span><br>
 						<b>Longitude:</b> <span>${longitude}</span><br>
