@@ -34,13 +34,13 @@ function parseGeoItem(data) {
 }
 
 exports.handler = async function(event) {
-	console.log(event);
 	switch(event.httpMethod.toLowerCase()) {
 		case 'get': {
 			try {
 				const app = getApp();
 				const { getFirestore } = require('firebase-admin/firestore');
 				const db = getFirestore(app);
+				// @TODO check authentication / ownership
 
 				if ('id' in event.queryStringParameters) {
 					const doc = await db.collection('geo').doc(event.queryStringParameters.id).get();
@@ -53,7 +53,7 @@ exports.handler = async function(event) {
 							body: JSON.stringify({
 								uuid: doc.id,
 								...doc.data(),
-								// ...parseGeoItem(doc),
+								// ...parseGeoItem(doc.data()),
 							})
 						};
 					} else {
@@ -131,9 +131,30 @@ exports.handler = async function(event) {
 			}
 		}
 
+		// case 'put': return { statusCode: 501 };
 		case 'delete':
-		// case 'put':
-			return { statusCode: 501 };
+			if ('id' in event.queryStringParameters) {
+				try {
+					const app = getApp();
+					const { getFirestore } = require('firebase-admin/firestore');
+					const db = getFirestore(app);
+					await db.collection('geo').doc(event.queryStringParameters.id).delete();
+					return { statusCode: 204 };
+				} catch(err) {
+					console.error(err);
+					return {
+						statusCode: 500,
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({ error: 'Error deleting record'}),
+					};
+				}
+			} else {
+				return {
+					statusCode: 400,
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ error: 'Missing required param: `id`' }),
+				};
+			}
 
 		default:
 			return { statusCode: 405 };
