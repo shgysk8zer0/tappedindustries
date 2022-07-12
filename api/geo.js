@@ -95,24 +95,33 @@ exports.handler = async function(event) {
 			}
 		}
 
-		case 'put':
 		case 'post': {
 			try {
-				const { getFirestore } = require('firebase-admin/firestore');
-				// const { getFirestore, GeoPoint } = require('firebase-admin/firestore');
+				const { getFirestore, GeoPoint } = require('firebase-admin/firestore');
 				const app = getApp();
 				const db = getFirestore(app);
 				const body = JSON.parse(event.isBase64Encoded ? atob(event.body) : event.body);
 				const { v4: uuidv4 } = require('uuid');
-				// const coords = new GeoPoint(latitude, longitude);
-				const timestamp = getTimestamp();
-				const id = uuidv4();
+				const {
+					dev_eui: tracker_id,
+					decoded: {
+						payload: {
+							battery,
+							gps_status: { value: gps_status },
+							report_type: { value: report_type },
+							position: { latitude, longitude },
+						}
+					},
+				} = body.data;
 
+				const id = uuidv4();
 				await db.collection('geo').doc(id).set({
-					method: event.httpMethod,
-					timestamp,
-					body,
-					headers: event.headers,
+					battery,
+					timestamp: getTimestamp(),
+					coords: new GeoPoint(latitude, longitude),
+					gps_status,
+					report_type,
+					tracker_id,
 				});
 
 				return {
@@ -121,7 +130,7 @@ exports.handler = async function(event) {
 						'Content-Type': 'application/json',
 						'Location': `${event.rawUrl}?id=${id}`,
 					},
-					body: JSON.stringify({ id, timestamp }),
+					body: JSON.stringify({ id }),
 				};
 			} catch(err) {
 				console.error(err);
@@ -133,7 +142,7 @@ exports.handler = async function(event) {
 			}
 		}
 
-		// case 'put': return { statusCode: 501 };
+
 		case 'delete':
 			if ('id' in event.queryStringParameters) {
 				try {
@@ -157,6 +166,9 @@ exports.handler = async function(event) {
 					body: JSON.stringify({ error: 'Missing required param: `id`' }),
 				};
 			}
+
+		case 'patch':
+		case 'put': return { statusCode: 501 };
 
 		default:
 			return { statusCode: 405 };
