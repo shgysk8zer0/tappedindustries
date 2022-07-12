@@ -6,6 +6,7 @@ const config = {
 	fresh: [
 		'/',
 		'/manifest.json',
+		'/api/geo',
 	].map(url => new URL(url, location.origin).href),
 	stale: [
 		/* HTML and Templates */
