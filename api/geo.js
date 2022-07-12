@@ -112,7 +112,7 @@ exports.handler = async function(event) {
 							position: { latitude, longitude },
 						}
 					},
-				} = body.data;
+				} = body;
 
 				const id = uuidv4();
 				await db.collection('geo').doc(id).set({
