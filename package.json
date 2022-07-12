@@ -1,8 +1,8 @@
 {
-  "name": "static-template",
-  "version": "1.1.0",
+  "name": "tappedindustries",
+  "version": "1.0.0",
   "private": true,
-  "description": "A template repository for static sites, including skeleton JS, CSS, SVGs, fonts, etc.",
+  "description": "A prototype of a cattle tracking app for Tapped Industries",
   "config": {
     "serve": {
       "domain": "localhost",
@@ -64,6 +64,7 @@
     "version:bump:major": "npm version --no-git-tag-version patch"
   },
   "dependencies": {
+    "firebase-admin": "^11.0.0",
     "netlify-js-app": "^2.0.0"
   }
 }

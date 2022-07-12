@@ -12,3 +12,7 @@
 #install-btn > svg {
 	margin-bottom: 10px;
 }
+
+#logo {
+	height: auto;
+}

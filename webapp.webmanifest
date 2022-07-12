@@ -1,10 +1,10 @@
 {
-  "name": "static template",
-  "short_name": "static",
-  "version": "1.1.0",
+  "name": "Tapped Industries Cattle Tracking Prototype",
+  "short_name": "TappedIndustries",
+  "version": "1.0.0",
   "lang": "en",
   "dir": "ltr",
-  "description": "A template repository for static sites, including skeleton JS, CSS, SVGs, fonts, etc.",
+  "description": "A prototype of a cattle tracking app for Tapped Industries",
   "orientation": "any",
   "start_url": "/",
   "theme_color": "#007bff",
@@ -16,16 +16,27 @@
     "type": "image/svg+xml",
     "purpose": "any maskable"
   }, {
-    "src": "/img/icon-192.png",
-    "sizes": "192x192",
-    "type": "image/png",
-    "purpose": "any maskable"
-  }, {
     "src": "/img/icon-512.png",
     "sizes": "512x512",
     "type": "image/png",
     "purpose": "any maskable"
+  }, {
+    "src": "/img/icon-192.png",
+    "sizes": "192x192",
+    "type": "image/png",
+    "purpose": "any maskable"
   }],
+  "features": [
+    "Installable as a PWA on Android and Windows",
+    "App and basic functionality works offline",
+    "Shows recent device locations on a map",
+    "Endpoint for posting device locations",
+    "Support for a variety of different map types",
+    "Dark / Light / System theme toggle",
+    "Built using Leaflet and Firebase (available on many other platforms)",
+    "Can easily be converted into native apps on Windows and Android, with iOS app mostly supported",
+    "Setup for 'deploy previews' with testing and approvals (CI/CD)"
+  ],
   "screenshots": [{
     "src": "https://i.imgur.com/Mx3Wlp0h.jpg",
     "sizes": "1024x501",
@@ -54,9 +65,18 @@
   "related_applications": [{
     "platform": "webapp",
     "url": "/webapp.webmanifest"
+  }, {
+    "platform": "play",
+    "url": "/#"
+  }, {
+    "platform": "itunes",
+    "url": "/#"
+  }, {
+    "platform": "windows",
+    "url": "/#"
   }],
   "developer": {
-		"name": "Chris Zuber",
-		"url": "https://kernvalley.us"
-	}
+    "name": "Chris Zuber",
+    "url": "https://contact.kernvalley.us"
+  }
 }
