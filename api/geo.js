@@ -66,6 +66,7 @@ exports.handler = async function(event) {
 						};
 					}
 				} else {
+					// @TODO Only select the most recent entry by device ID
 					const docs = await db.collection('geo').get();
 					// `docs.map()` won't work
 					const entries = [];
@@ -101,7 +102,7 @@ exports.handler = async function(event) {
 				// const { getFirestore, GeoPoint } = require('firebase-admin/firestore');
 				const app = getApp();
 				const db = getFirestore(app);
-				const body = JSON.parse(event.body);
+				const body = JSON.parse(event.isBase64Encoded ? atob(event.body) : event.body);
 				const { v4: uuidv4 } = require('uuid');
 				// const coords = new GeoPoint(latitude, longitude);
 				const timestamp = getTimestamp();
@@ -111,6 +112,7 @@ exports.handler = async function(event) {
 					method: event.httpMethod,
 					timestamp,
 					body,
+					headers: event.headers,
 				});
 
 				return {

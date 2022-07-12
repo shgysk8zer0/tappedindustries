@@ -43,26 +43,28 @@
 		<!-- <script src="/js/index.min.js" referrerpolicy="no-referrer" defer=""></script> -->
 		<link rel="manifest" href="/webapp.webmanifest" />
 		<link rel="license" href="/LICENSE" />
-		<link rel="icon" href="/img/logo.svg" type="image/svg+xml" sizes="any" />
-		<!-- <link rel="icon" href="/img/favicon.svg" type="image/svg+xml" sizes="any" /> -->
-		<!-- <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png" />
+		<link rel="icon" href="/img/favicon.svg" type="image/svg+xml" sizes="any" />
+		<link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png" />
 		<link rel="icon" type="image/png" sizes="32x32" href="/img/icon-32.png" />
 		<link rel="icon" type="image/png" sizes="16x16" href="/img/icon-16.png" />
 		<link rel="mask-icon" href="/img/safari-pinned-tab.svg" color="#007bff" />
-		<link rel="shortcut icon" href="/favicon.ico" /> -->
+		<link rel="shortcut icon" href="/favicon.ico" />
 		<link rel="preload" href="/img/icons.svg" as="image" type="image/svg+xml" />
 		<link rel="preconnect" href="https://api.github.com" crossorigin="anonymous" referrerpolicy="no-referrer" />
 		<link rel="preload" href="/api/geo" as="fetch" type="application/json" importance="high" fetchpriority="high" referrerpolicy="no-referrer" />
 		<link rel="preload" href="https://cdn.kernvalley.us/components/leaflet/map.html" as="fetch" type="text/html" crossorigin="anonymous" referrerpolicy="no-referrer" importance="high" fetchpriority="high" />
 		<link rel="preload" href="https://cdn.kernvalley.us/components/leaflet/map.css" as="style" type="text/css" crossorigin="anonymous" referrerpolicy="no-referrer" importance="high" fetchpriority="high" />
 		<link rel="preload" href="https://cdn.kernvalley.us/components/github/user.css" as="style" type="text/css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-		<link rel="stylesheet" href="/css/index.css" media="all" />
-		<!-- <link rel="stylesheet" href="/css/index.min.css" media="all" /> -->
+		<!-- <link rel="stylesheet" href="/css/index.css" media="all" /> -->
+		<link rel="stylesheet" href="/css/index.min.css" media="all" />
 	</head>
 	<body id="top" class="grid font-main background-primary color-default overflow-x-hidden">
 		<header id="header" class="background-cover background-fixed"></header>
 		<nav id="nav" class="sticky top shadow background-accent color-alt z-3 flex row no-wrap overflow-x-auto">
-			<img src="/img/logo.svg" alt="logo" width="32" height="32" id="logo" />
+			<!-- <img src="/img/logo.svg" alt="logo" width="32" height="32" id="logo" /> -->
+			<svg fill="currentColor" height="32" width="32" id="logo" role="img" aria-hidden="true">
+				<use xlink:href="/img/icons.svg#logo"></use>
+			</svg>
 			<span class="grow-4"></span>
 			<button is="pwa-install" id="install-btn" class="btn nav-btn" src="/service-worker.js" scope="/" title="Install Web App" reloadonupdate="" hidden="">
 				<svg class="icon" height="22" width="22" fill="currentColor" role="img" aria-hidden="true">
@@ -72,7 +74,11 @@
 			</button>
 		</nav>
 		<main id="main" class="card shadow"></main>
-		<aside id="sidebar" class="card shadow center"></aside>
+		<aside id="sidebar" class="card shadow center">
+			<button type="button" class="btn btn-primary" data-theme-set="auto">System Theme</button>
+			<button type="button" class="btn btn-primary" data-theme-set="light">Light Theme</button>
+			<button type="button" class="btn btn-primary" data-theme-set="dark">Dark Theme</button>
+		</aside>
 		<footer id="footer">
 			<div class="flex row wrap space-around footer-links">
 				<div class="inline-block footer-links">

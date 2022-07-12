@@ -8,10 +8,12 @@ import 'https://cdn.kernvalley.us/components/github/user.js';
 import 'https://cdn.kernvalley.us/components/app/stores.js';
 import 'https://cdn.kernvalley.us/components/leaflet/map.js';
 import 'https://cdn.kernvalley.us/components/leaflet/marker.js';
+import { get as getLocation } from 'https://cdn.kernvalley.us/js/std-js/geo.js';
 import { useSVG } from 'https://cdn.kernvalley.us/js/std-js/svg.js';
 import { getJSON } from 'https://cdn.kernvalley.us/js/std-js/http.js';
+import { loadImage } from 'https://cdn.kernvalley.us/js/std-js/loader.js';
 import { TILES } from 'https://cdn.kernvalley.us/components/leaflet/tiles.js';
-import { ready, loaded, toggleClass, on, create } from 'https://cdn.kernvalley.us/js/std-js/dom.js';
+import { ready, loaded, toggleClass, on, create, css } from 'https://cdn.kernvalley.us/js/std-js/dom.js';
 import { getCustomElement } from 'https://cdn.kernvalley.us/js/std-js/custom-elements.js';
 import { importGa, externalHandler, telHandler, mailtoHandler } from 'https://cdn.kernvalley.us/js/std-js/google-analytics.js';
 import { GA } from './consts.js';
@@ -45,8 +47,14 @@ Promise.all([
 	getCustomElement('install-prompt'),
 	getCustomElement('leaflet-map'),
 	getCustomElement('leaflet-marker'),
+	loadImage('/img/cow.svg', { height: 28, width: 28, slot: 'icon' }),
 	ready(),
-]).then(([HTMLInstallPromptElement, HTMLLeafletMapElement, HTMLLeafletMarkerElement]) => {
+]).then(([HTMLInstallPromptElement, HTMLLeafletMapElement, HTMLLeafletMarkerElement, cow]) => {
+	css('#sidebar > .btn', { width: '100%', 'margin-bottom': '0.6em' });
+	on('#sidebar > .btn[data-theme-set]', 'click', ({ target: { dataset: { themeSet: value }}}) => {
+		cookieStore.set({ name: 'theme', value }).catch(console.error);
+	});
+
 	document.getElementById('logo').after(
 		...Object.entries(TILES).map(([key, { tileSrc, attribution }], i) => create('button', {
 			text: `${key} [${(i + 1).toString()}]`,
@@ -56,17 +64,21 @@ Promise.all([
 			events: {
 				click: ({ target: { dataset: { tileSrc, attribution: html }}}) => {
 					const map = document.querySelector('leaflet-map');
-					const sanitizer = new Sanitizer();
+					const attr = document.createElement('span');
+					attr.slot = 'attribution';
+					attr.setHTML(html);
 					map.tileSrc = tileSrc;
-					map.attribution = create('span', { html, sanitizer, slot: 'attribution' });
+					map.attribution = attr;
 				}
 			}
 		}))
 	);
 
-	document.getElementById('main').replaceChildren(
-		new HTMLLeafletMapElement({ crossOrigin: 'anonymous', detectRetina: true, zoomControl: true })
-	);
+	document.getElementById('main').replaceChildren(new HTMLLeafletMapElement({
+		crossOrigin: 'anonymous',
+		detectRetina: true,
+		zoomControl: true,
+	}));
 
 	getJSON('/api/geo').then(items => {
 		if (items.error) {
@@ -75,8 +87,9 @@ Promise.all([
 
 		const map = document.querySelector('leaflet-map');
 		const [{ coords: { latitude, longitude }}] = items;
-		const sanitizer = new Sanitizer();
+
 		map.center = { latitude, longitude };
+		css(map, { '--map-height': '85vh', '--map-width': '100%' });
 		map.append(
 			...items.filter(({ coords }) => typeof coords === 'object')
 				.map(({ uuid, coords, timestamp, battery, tracker_id, }) => {
@@ -91,13 +104,13 @@ Promise.all([
 						<b>Tracker ID:</b> <span>${tracker_id}</span><br>
 						<b>Latitude:</b> <span>${latitude}</span><br>
 						<b>Longitude:</b> <span>${longitude}</span><br>
-						<b>Battery:</b> <span>${battery}</span>%<br>
+						<b>Battery:</b> <span>${battery} %</span><br>
 						<b>DateTime</b>: <time datetime="${date.toISOString()}">${date.toLocaleString()}</time>
-					`, { sanitizer });
+					`);
 
 					content.slot = 'popup';
 					marker.id = uuid;
-					marker.append(content);
+					marker.append(content, cow.cloneNode());
 					return marker;
 				})
 		);
@@ -130,4 +143,20 @@ Promise.all([
 
 	on('#install-btn', ['click'], () => new HTMLInstallPromptElement().show())
 		.forEach(el => el.hidden = false);
+
+	document.getElementById('sidebar').append(create('button', {
+		type: 'button',
+		classList: ['btn', 'btn-primary'],
+		styles: { width: '100%' },
+		children: [
+			useSVG('mark-location', { height: 20, width: 20, fill: 'currentColor', classList: ['icon'] }),
+			create('span', { text: 'Current Location' }),
+		],
+		events: {
+			click: async () => {
+				const { coords: { latitude, longitude }} = await getLocation({ enableHightAccuracy: true });
+				document.querySelector('leaflet-map').flyTo({ latitude, longitude });
+			},
+		}
+	}));
 });
