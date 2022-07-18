@@ -17,7 +17,7 @@
 		<!-- Social data -->
 		<!-- Facebook | OpenGraph -->
 		<meta property="og:type" content="website" />
-		<meta property="og:title" content="" />
+		<meta property="og:title" content="Tapped Industries | Cattle Tracking Prototype" />
 		<meta property="og:url" content="" />
 		<meta property="og:description" content="" />
 		<meta property="og:keywords" content="" />
@@ -39,8 +39,8 @@
 		<title itemprop="headline">Tapped Industries | Cattle Tracking Prototype</title>
 		<script type="text/javascript" src="https://cdn.polyfill.io/v3/polyfill.min.js" crossorigin="anonymous" referrerpolicy="no-referrer" defer="" nomodule=""></script>
 		<script type="text/javascript" src="https://unpkg.com/@webcomponents/custom-elements@1.4.2/custom-elements.min.js" crossorigin="anonymous" referrerpolicy="no-referrer" integrity="sha384-xyhN4T4+9VPh8uXl6uWjGzsqwNXN9C2tla8b6zSrSqYlMFUoeCdoxiEJU0js+GNE" defer="" nomodule=""></script>
-		<script type="module" src="/js/index.js" referrerpolicy="no-referrer"></script>
-		<!-- <script src="/js/index.min.js" referrerpolicy="no-referrer" defer=""></script> -->
+		<!-- <script type="module" src="/js/index.js" referrerpolicy="no-referrer"></script> -->
+		<script src="/js/index.min.js" referrerpolicy="no-referrer" defer=""></script>
 		<link rel="manifest" href="/webapp.webmanifest" />
 		<link rel="license" href="/LICENSE" />
 		<link rel="icon" href="/img/favicon.svg" type="image/svg+xml" sizes="any" />
@@ -56,7 +56,7 @@
 		<link rel="preload" href="https://cdn.kernvalley.us/components/leaflet/map.css" as="style" type="text/css" crossorigin="anonymous" referrerpolicy="no-referrer" importance="high" fetchpriority="high" />
 		<link rel="preload" href="https://cdn.kernvalley.us/components/github/user.css" as="style" type="text/css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 		<!-- <link rel="stylesheet" href="/css/index.css" media="all" /> -->
-		<link rel="stylesheet" href="/css/index.min.css" media="all" />
+		<link rel="stylesheet" href="/css/index.min.css" referrerpolicy="no-referrer" media="all" />
 	</head>
 	<body id="top" class="grid font-main background-primary color-default overflow-x-hidden">
 		<header id="header" class="background-cover background-fixed"></header>
@@ -73,7 +73,9 @@
 				<span class="mobile-hidden">Install</span>
 			</button>
 		</nav>
-		<main id="main" class="card shadow"></main>
+		<main id="main" class="card shadow">
+			<leaflet-map zoomcontrol="" crossorigin="anonymous" detectretina=""></leaflet-map>
+		</main>
 		<aside id="sidebar" class="card shadow center">
 			<button type="button" class="btn btn-primary" data-theme-set="auto">System Theme</button>
 			<button type="button" class="btn btn-primary" data-theme-set="light">Light Theme</button>

@@ -2,7 +2,7 @@
 /* eslint-env serviceworker */
 
 const config = {
-	version: '1.0.0',
+	version: '1.0.0-07-18-2022',
 	fresh: [
 		'/',
 		'/manifest.json',
