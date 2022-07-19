@@ -45,11 +45,11 @@ if (typeof GA === 'string') {
 
 Promise.all([
 	getCustomElement('install-prompt'),
-	getCustomElement('leaflet-map'),
 	getCustomElement('leaflet-marker'),
 	loadImage('/img/cow.svg', { height: 28, width: 28, slot: 'icon' }),
+	customElements.whenDefined('leaflet-map'),
 	ready(),
-]).then(([HTMLInstallPromptElement, HTMLLeafletMapElement, HTMLLeafletMarkerElement, cow]) => {
+]).then(([HTMLInstallPromptElement, HTMLLeafletMarkerElement, cow]) => {
 	css('#sidebar > .btn', { width: '100%', 'margin-bottom': '0.6em' });
 	on('#sidebar > .btn[data-theme-set]', 'click', ({ target: { dataset: { themeSet: value }}}) => {
 		cookieStore.set({ name: 'theme', value }).catch(console.error);
@@ -74,12 +74,6 @@ Promise.all([
 		}))
 	);
 
-	document.getElementById('main').replaceChildren(new HTMLLeafletMapElement({
-		crossOrigin: 'anonymous',
-		detectRetina: true,
-		zoomControl: true,
-	}));
-
 	getJSON('/api/geo').then(items => {
 		if (items.error) {
 			throw new Error(items.error);
@@ -89,7 +83,6 @@ Promise.all([
 		const [{ coords: { latitude, longitude }}] = items;
 
 		map.center = { latitude, longitude };
-		css(map, { '--map-height': '85vh', '--map-width': '100%' });
 		map.append(
 			...items.filter(({ coords }) => typeof coords === 'object')
 				.map(({ uuid, coords, timestamp, battery, tracker_id, }) => {

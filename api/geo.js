@@ -33,6 +33,17 @@ function parseGeoItem(data) {
 	};
 }
 
+async function getDeviceIds() {
+	return [
+		'000DB599C000011C',
+		'000DB599C000011F',
+	];
+}
+
+async function loggedIn() {
+	return true;
+}
+
 exports.handler = async function(event) {
 	switch(event.httpMethod.toLowerCase()) {
 		case 'get': {
@@ -42,8 +53,16 @@ exports.handler = async function(event) {
 				const db = getFirestore(app);
 				// @TODO check authentication / ownership
 
-				if ('id' in event.queryStringParameters) {
-					const doc = await db.collection('geo').doc(event.queryStringParameters.id).get();
+				if (! await loggedIn()) {
+					return {
+						statusCode: 403,
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({ error: 'You must be logged in' }),
+					};
+				} else if ('id' in event.queryStringParameters) {
+					const doc = await db.collection('geo')
+						.doc(event.queryStringParameters.id)
+						.get();
 
 					if (doc.exists) {
 						// @TODO use `parseGeoItem(doc.data())` if valid item
@@ -67,7 +86,12 @@ exports.handler = async function(event) {
 					}
 				} else {
 					// @TODO Only select the most recent entry by device ID
-					const docs = await db.collection('geo').get();
+					const query = db.collection('geo');
+					const devices = await getDeviceIds(event);
+					const docs = await query
+						.where('tracker_id', 'in', devices)
+						.orderBy('timestamp', 'desc')
+						.limit(devices.length + 1).get();
 					// `docs.map()` won't work
 					const entries = [];
 					docs.forEach(doc => {
