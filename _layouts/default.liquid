@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="no-js border-box smooth-scroll" data-layout="right-sidebar" data-theme="auto" data-service-worker="/service-worker.js" data-scope="/" data-reload-on-update="" prefix="og: http://ogp.me/ns#" itemtype="https://schema.org/WebPage" itemscope="">
+	{% include "head" %}
+	<body id="top" class="grid font-main background-primary color-default overflow-x-hidden">
+		{% include "header" %}
+		{% include "nav" %}
+		<main id="main" class="card shadow">
+			{{ content }}
+		</main>
+		{% include "sidebar" %}
+		{% include "footer" %}
+		{% include "share" %}
+	</body>
+</html>

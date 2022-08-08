@@ -4,8 +4,10 @@
   publish = "./_site/"
   command = "npx @11ty/eleventy --serve"
   functions = "api"
+  environment = "development"
 [build]
   base = "./"
   publish = "./_site/"
   command = "npm run build && eleventy"
   functions = "api"
+  environment = "production"

@@ -1,0 +1,89 @@
+<footer id="footer">
+	<div class="flex row wrap space-around footer-links">
+		<div class="inline-block footer-links">
+			<a href="https://www.tappedindustries.com/" class="block" target="_self" rel="noopener nofererrer external">
+				<svg class="icon current-color" width="24" height="24" fill="currentColor" role="img" aria-hidden="true">
+					<use xlink:href="/img/icons.svg#web-browser"></use>
+				</svg>
+				<span>Tapped Industries</span>
+			</a>
+			<a href="mailto:nicholas@tappedindustries.com" class="block" target="_self" rel="noopener nofererrer external">
+				<svg class="icon current-color" width="24" height="24" fill="currentColor" role="img" aria-hidden="true">
+					<use xlink:href="/img/icons.svg#address-book"></use>
+				</svg>
+				<span>Contact</span>
+			</a>
+		</div>
+		<div class="inline-block footer-links">
+			{% if social.facebook %}
+				<a class="block" href="https://www.facebook.com/{{ social.facebook }}/" target="_blank" rel="noopener noreferrer external" itemprop="sameAs">
+					<svg class="social-icon" width="20" height="20" fill="currentColor" role="img" aria-hidden="true">
+						<use xlink:href="/img/icons.svg#facebook"></use>
+					</svg>
+					<span>Facebook</span>
+				</a>
+			{% endif %}
+			{% if social.twitter %}
+				<a class="block" href="https://twitter.com/{{ social.twitter }}" target="_blank" rel="noopener noreferrer external" itemprop="sameAs">
+					<svg class="social-icon" width="20" height="20" fill="currentColor" role="img" aria-hidden="true">
+						<use xlink:href="/img/icons.svg#twitter"></use>
+					</svg>
+					<span>Twitter</span>
+				</a>
+			{% endif %}
+			{% if social.instagram %}
+				<a class="block" href="https://instagram.com/{{ social.instagram }}/" target="_blank" rel="noopener noreferrer external" itemprop="sameAs">
+					<img src="https://cdn.kernvalley.us/img/logos/instagram.svg" class="social-icon" loading="lazy" decoding="async" crossorigin="anonymous" referrerpolicy="no-referrer" alt="" width="20" height="20" />
+					<span>Instagram</span>
+				</a>
+			{% endif %}
+			{% if social.linkedIn %}
+				<a class="block" href="https://www.linkedin.com/company/{{ social.instagram }}/" target="_blank" rel="noopener noreferrer external" itemprop="sameAs">
+					<svg class="icon social-icon" width="20" height="20" role="img" aria-hidden="true">
+						<use xlink:href="/img/icons.svg#linkedin"></use>
+					</svg>
+					<span>LinkedIn</span>
+				</a>
+			{% endif %}
+		</div>
+		<div class="inline-block">
+			<a class="block" href="https://github.com/tapped-industries/" target="_blank" rel="noopener noreferrer external">
+				<svg class="current-color icon social-icon" role="img" aria-hidden="true">
+					<use xlink:href="/img/icons.svg#mark-github"></use>
+				</svg>
+				<span>GitHub Profile</span>
+			</a>
+			<a class="block" href="https://github.com/shgysk8zer0/tappedindustries" target="_blank" rel="noopener noreferrer external">
+				<svg class="current-color icon social-icon" role="img" aria-hidden="true">
+					<use xlink:href="/img/icons.svg#repo"></use>
+				</svg>
+				<span>GitHub Repo</span>
+			</a>
+			<a class="block" href="https://github.com/shgysk8zer0/tappedindustries/issues" target="_blank" rel="noopener noreferrer external">
+				<svg class="current-color icon social-icon" role="img" aria-hidden="true">
+					<use xlink:href="/img/icons.svg#issue-opened"></use>
+				</svg>
+				<span>Report a Problem</span>
+			</a>
+		</div>
+	</div>
+	<div>
+		<hr />
+		<app-stores id="store-list" class="flex row wrap app-stores"></app-stores>
+	</div>
+	<hr/>
+	<div class="copyright flex wrap space-evenly">
+		<github-user user="kernvalley" loading="lazy" class="custom-element">
+			<h3 slot="header" class="center if-defined">Created By</h3>
+			<div slot="footer">
+				<span>©</span>
+				<time itemprop="copyrightYear">2022</time>
+				<span itemprop="copyrightHolder" itemtype="https://schema.org/Person" itemscope="">
+					<a href="https://kernvalley.us" target="_blank" rel="external noopener noreferrer" itemprop="url">
+						<span itemprop="name">KernValley.US</span>
+					</a>
+				</span>
+			</div>
+		</github-user>
+	</div>
+</footer>

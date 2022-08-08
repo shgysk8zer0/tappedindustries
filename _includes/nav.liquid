@@ -1,0 +1,13 @@
+<nav id="nav" class="sticky top shadow background-accent color-alt z-3 flex row no-wrap overflow-x-auto">
+	<!-- <img src="/img/logo.svg" alt="logo" width="32" height="32" id="logo" /> -->
+	<svg fill="currentColor" height="32" width="32" id="logo" role="img" aria-hidden="true">
+		<use xlink:href="/img/icons.svg#logo"></use>
+	</svg>
+	<span class="grow-4"></span>
+	<button is="pwa-install" id="install-btn" class="btn nav-btn" src="/service-worker.js" scope="/" title="Install Web App" reloadonupdate="" hidden="">
+		<svg class="icon" height="22" width="22" fill="currentColor" role="img" aria-hidden="true">
+			<use xlink:href="/img/icons.svg#system-software-install"></use>
+		</svg>
+		<span class="mobile-hidden">Install</span>
+	</button>
+</nav>

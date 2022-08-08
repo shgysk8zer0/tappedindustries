@@ -1,4 +1,5 @@
 /* eslint-env node */
+const yaml = require("js-yaml");
 
 module.exports = (eleventyConfig) => {
 	eleventyConfig.ignores.add('.github');
@@ -15,8 +16,17 @@ module.exports = (eleventyConfig) => {
 	eleventyConfig.addPassthroughCopy('sw-config.js');
 	eleventyConfig.addPassthroughCopy('favicon.ico');
 	eleventyConfig.addPassthroughCopy('browserconfig.xml');
+	eleventyConfig.addDataExtension('yaml', contents => yaml.load(contents));
+	eleventyConfig.addDataExtension('yml', contents => yaml.load(contents));
+	eleventyConfig.addLiquidFilter('jsonify', function(data) {
+		console.log({ jsonify: data });
+		return JSON.stringify(data) || 'IDK';
+	});
 
 	return {
+		environment: {
+			ENVIRONMENT: process.env.environment || 'unknown',
+		},
 		dir: {
 			layouts: '_layouts',
 			includes: '_includes',
@@ -24,6 +34,7 @@ module.exports = (eleventyConfig) => {
 			input: './',
 			output: '_site',
 			dataTemplateEngine: 'liquid',
-		}
+		},
+		dynamicPartials: true,
 	}
 };

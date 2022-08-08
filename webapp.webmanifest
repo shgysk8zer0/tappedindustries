@@ -65,15 +65,6 @@
   "related_applications": [{
     "platform": "webapp",
     "url": "/webapp.webmanifest"
-  }, {
-    "platform": "play",
-    "url": "/#"
-  }, {
-    "platform": "itunes",
-    "url": "/#"
-  }, {
-    "platform": "windows",
-    "url": "/#"
   }],
   "developer": {
     "name": "Chris Zuber",
