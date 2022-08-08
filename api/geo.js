@@ -37,6 +37,8 @@ async function getDeviceIds() {
 	return [
 		'000DB599C000011C',
 		'000DB599C000011F',
+		'000DB599C000014B',
+		'000DB599C0000140',
 	];
 }
 
