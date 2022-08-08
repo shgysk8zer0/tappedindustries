@@ -50,6 +50,7 @@
     "fix:css": "if [ -f './stylelintrc.json' ]; then stylelint ${npm_package_config_dir_css} --fix; fi",
     "fix:js": "if [ -f '.eslintrc.json' ]; then eslint. --fix; fi",
     "build": "npm run build:icons && npm run build:css && npm run build:js",
+    "build:site": "npx @11ty/eleventy --port=${npm_package_config_serve_port}",
     "build:css": "if [ -f 'postcss.config.js' ]; then postcss ${npm_package_config_dir_css}index.css -o ${npm_package_config_dir_css}index.min.css; fi",
     "build:icons": "if [ -f ${npm_package_config_icons} ]; then $(svg-sprite-generate -c ${npm_package_config_icons} -o 'img/icons.svg'); fi",
     "build:js": "if [ -f 'rollup.config.js' ]; then rollup --config; fi",
@@ -61,10 +62,13 @@
     "version:bump": "npm run version:bump:patch",
     "version:bump:patch": "npm version --no-git-tag-version patch",
     "version:bump:minor": "npm version --no-git-tag-version minor",
-    "version:bump:major": "npm version --no-git-tag-version patch"
+    "version:bump:major": "npm version --no-git-tag-version major"
   },
   "dependencies": {
+    "@11ty/eleventy": "^1.0.1",
     "firebase-admin": "^11.0.1",
+    "liquidjs": "^9.39.2",
+    "markdown-it": "^13.0.1",
     "netlify-js-app": "^2.0.0"
   }
 }
