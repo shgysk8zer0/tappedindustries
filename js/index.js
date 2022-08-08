@@ -13,7 +13,7 @@ import { useSVG } from 'https://cdn.kernvalley.us/js/std-js/svg.js';
 import { getJSON } from 'https://cdn.kernvalley.us/js/std-js/http.js';
 import { loadImage } from 'https://cdn.kernvalley.us/js/std-js/loader.js';
 import { TILES } from 'https://cdn.kernvalley.us/components/leaflet/tiles.js';
-import { ready, loaded, toggleClass, on, create, css } from 'https://cdn.kernvalley.us/js/std-js/dom.js';
+import { ready, loaded, toggleClass, on, create, css, data } from 'https://cdn.kernvalley.us/js/std-js/dom.js';
 import { getCustomElement } from 'https://cdn.kernvalley.us/js/std-js/custom-elements.js';
 import { importGa, externalHandler, telHandler, mailtoHandler } from 'https://cdn.kernvalley.us/js/std-js/google-analytics.js';
 import { GA } from './consts.js';
@@ -103,6 +103,7 @@ Promise.all([
 
 					content.slot = 'popup';
 					marker.id = uuid;
+					data(marker, { trackerId: tracker_id, timestamp: date.toISOString(), battery });
 					marker.append(content, cow.cloneNode());
 					return marker;
 				})
