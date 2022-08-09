@@ -1,0 +1,9 @@
+- href: "/map/"
+  label: Map
+  accessKey: m
+- href: "/contact/"
+  label: Contact
+  accessKey: c
+- href: "/store/"
+  label: Store
+  accessKey: s

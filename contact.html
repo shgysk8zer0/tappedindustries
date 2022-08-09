@@ -1,0 +1,46 @@
+---
+layout: default
+title: Contact | Tapped Industries
+---
+<form id="contact-form">
+	<fieldset class="no-border">
+		<div class="form-group">
+			<label for="contact-name" class="input-label required">
+				<span>Name</span>
+			</label>
+			<input type="text" name="name" id="contact-name" class="input" autocomplete="name" placeholder="Firstname Lastname" required="" />
+		</div>
+		<div class="form-group">
+			<label for="contact-email" class="input-label required">
+				<span>Email</span>
+			</label>
+			<input type="email" name="email" id="contact-email" class="input" autocomplete="email" placeholder="user@example.com" required="" />
+		</div>
+		<div class="form-group">
+			<label for="contact-phone">
+				<span>Phone</span>
+			</label>
+			<input type="tel" name="tel" id="contact-tel" class="input" placeholder="+1-555-555-5555" />
+		</div>
+		<div class="form-group">
+			<label for="contact-subject" class="input-label required">
+				<span>Subject</span>
+			</label>
+			<input type="text" name="subject" id="contact-subject" class="input" placeholder="Message Subject" autocomplete="off" required="" />
+		</div>
+		<div class="form-group">
+			<label for="contact-message required">
+				<span>Message</span>
+			</label>
+			<textarea name="message" id="contact-message" class="input" autocomplete="off" required=""></textarea>
+		</div>
+	</fieldset>
+	<div class="flex row btns">
+		<button type="submit" class="btn btn-accept">
+			<span>Submit</span>
+		</button>
+		<button type="reset" class="btn btn-reject">
+			<span>Reset</span>
+		</button>
+	</div>
+</form>

@@ -16,7 +16,25 @@ import { TILES } from 'https://cdn.kernvalley.us/components/leaflet/tiles.js';
 import { ready, loaded, toggleClass, on, create, css, data } from 'https://cdn.kernvalley.us/js/std-js/dom.js';
 import { getCustomElement } from 'https://cdn.kernvalley.us/js/std-js/custom-elements.js';
 import { importGa, externalHandler, telHandler, mailtoHandler } from 'https://cdn.kernvalley.us/js/std-js/google-analytics.js';
+import { konami } from 'https://cdn.kernvalley.us/js/konami/konami.js';
 import { GA } from './consts.js';
+
+konami().then(() => {
+	const dialog = create('dialog', {
+		children: [
+			create('div', {
+				text: 'Cheat Mode Enabled!',
+				classList: ['status-box', 'info'],
+			})
+		],
+		events: {
+			close: ({ target }) => target.remove(),
+		}
+	});
+
+	document.body.append(dialog);
+	dialog.showModal();
+})
 
 toggleClass([document.documentElement], {
 	'no-dialog': document.createElement('dialog') instanceof HTMLUnknownElement,
@@ -43,114 +61,141 @@ if (typeof GA === 'string') {
 	});
 }
 
-Promise.all([
-	getCustomElement('install-prompt'),
-	getCustomElement('leaflet-marker'),
-	loadImage('/img/cow.svg', { height: 28, width: 28, slot: 'icon' }),
-	customElements.whenDefined('leaflet-map'),
-	ready(),
-]).then(([HTMLInstallPromptElement, HTMLLeafletMarkerElement, cow]) => {
-	css('#sidebar > .btn', { width: '100%', 'margin-bottom': '0.6em' });
-	on('#sidebar > .btn[data-theme-set]', 'click', ({ target: { dataset: { themeSet: value }}}) => {
-		cookieStore.set({ name: 'theme', value }).catch(console.error);
-	});
+on('#sidebar > .btn[data-theme-set]', 'click', ({ target: { dataset: { themeSet: value }}}) => {
+	cookieStore.set({ name: 'theme', value }).catch(console.error);
+});
 
-	document.getElementById('logo').after(
-		...Object.entries(TILES).map(([key, { tileSrc, attribution }], i) => create('button', {
-			text: `${key} [${(i + 1).toString()}]`,
-			accesskey: (i + 1).toString(),
-			classList: ['btn', 'btn-primary', 'capitalize'],
-			dataset: { tileSrc, attribution },
-			events: {
-				click: ({ target: { dataset: { tileSrc, attribution: html }}}) => {
-					const map = document.querySelector('leaflet-map');
-					const attr = document.createElement('span');
-					attr.slot = 'attribution';
-					attr.setHTML(html);
-					map.tileSrc = tileSrc;
-					map.attribution = attr;
+css('#sidebar > .btn', { width: '100%', 'margin-bottom': '0.6em' });
+
+getCustomElement('install-prompt').then(HTMLInstallPromptElement => {
+	on('#install-btn', ['click'], () => new HTMLInstallPromptElement().show())
+		.forEach(el => el.hidden = false);
+});
+
+if (location.pathname.startsWith('/map')) {
+	Promise.all([
+		getCustomElement('leaflet-marker'),
+		loadImage('/img/cow.svg', { height: 28, width: 28, slot: 'icon' }),
+		customElements.whenDefined('leaflet-map'),
+		ready(),
+	]).then(([HTMLLeafletMarkerElement, cow]) => {
+		document.getElementById('logo').after(
+			...Object.entries(TILES).map(([key, { tileSrc, attribution }], i) => create('button', {
+				text: `${key} [${(i + 1).toString()}]`,
+				accesskey: (i + 1).toString(),
+				classList: ['btn', 'btn-primary', 'capitalize'],
+				dataset: { tileSrc, attribution },
+				events: {
+					click: ({ target: { dataset: { tileSrc, attribution: html }}}) => {
+						const map = document.querySelector('leaflet-map');
+						const attr = document.createElement('span');
+						attr.slot = 'attribution';
+						attr.setHTML(html);
+						map.tileSrc = tileSrc;
+						map.attribution = attr;
+					}
 				}
-			}
-		}))
-	);
-
-	getJSON('/api/geo').then(items => {
-		if (items.error) {
-			throw new Error(items.error);
-		}
-
-		const map = document.querySelector('leaflet-map');
-		const [{ coords: { latitude, longitude }}] = items;
-
-		map.center = { latitude, longitude };
-		map.append(
-			...items.filter(({ coords }) => typeof coords === 'object')
-				.map(({ uuid, coords, timestamp, battery, tracker_id, }) => {
-					const marker = new HTMLLeafletMarkerElement(coords);
-					const content = document.createElement('div');
-					const date = new Date(timestamp * 1000);
-					content.setHTML(`
-						<h3>Sample Data</h3>
-						<center>
-							<img src="https://cdn.kernvalley.us/img/raster/missing-image.png" height="160" width="320" loading="lazy" alt="" crossorigin="anonymous" referrerpolicy="no-referrer" />
-						</center>
-						<b>Tracker ID:</b> <span>${tracker_id}</span><br>
-						<b>Latitude:</b> <span>${latitude}</span><br>
-						<b>Longitude:</b> <span>${longitude}</span><br>
-						<b>Battery:</b> <span>${battery} %</span><br>
-						<b>DateTime</b>: <time datetime="${date.toISOString()}">${date.toLocaleString()}</time>
-					`);
-
-					content.slot = 'popup';
-					marker.id = uuid;
-					data(marker, { trackerId: tracker_id, timestamp: date.toISOString(), battery });
-					marker.append(content, cow.cloneNode());
-					return marker;
-				})
+			}))
 		);
-	}).catch(err => {
-		console.error(err);
-		const dialog = create('dialog', {
-			events: { close: ({ target }) => target.remove() },
+
+		getJSON('/api/geo').then(items => {
+			if (items.error) {
+				throw new Error(items.error);
+			}
+
+			const map = document.querySelector('leaflet-map');
+			const [{ coords: { latitude, longitude }}] = items;
+
+			map.center = { latitude, longitude };
+			map.append(
+				...items.filter(({ coords }) => typeof coords === 'object')
+					.map(({ uuid, coords, timestamp, battery, tracker_id, }) => {
+						const marker = new HTMLLeafletMarkerElement(coords);
+						const content = document.createElement('div');
+						const date = new Date(timestamp * 1000);
+						content.setHTML(`
+							<h3>Sample Data</h3>
+							<center>
+								<img src="https://cdn.kernvalley.us/img/raster/missing-image.png" height="160" width="320" loading="lazy" alt="" crossorigin="anonymous" referrerpolicy="no-referrer" />
+							</center>
+							<b>Tracker ID:</b> <span>${tracker_id}</span><br>
+							<b>Latitude:</b> <span>${latitude}</span><br>
+							<b>Longitude:</b> <span>${longitude}</span><br>
+							<b>Battery:</b> <span>${battery} %</span><br>
+							<b>DateTime</b>: <time datetime="${date.toISOString()}">${date.toLocaleString()}</time>
+						`);
+
+						content.slot = 'popup';
+						marker.id = uuid;
+						data(marker, { trackerId: tracker_id, timestamp: date.toISOString(), battery });
+						marker.append(content, cow.cloneNode());
+						return marker;
+					})
+			);
+		}).catch(err => {
+			console.error(err);
+			const dialog = create('dialog', {
+				events: { close: ({ target }) => target.remove() },
+				children: [
+					create('button', {
+						type: 'button',
+						classList: ['btn', 'btn-reject'],
+						children: [useSVG('x', {
+							width: 16,
+							height: 16,
+							fill: 'currentColor',
+							classList: ['icon']
+						})],
+						events: { click: ({ target }) => target.closest('dialog').close() },
+					}),
+					create('div', {
+						classList: ['status-box', 'error'],
+						text: err.message,
+					}),
+				]
+			});
+
+			document.body.append(dialog);
+			dialog.showModal();
+		});
+
+
+		document.getElementById('sidebar').append(create('button', {
+			type: 'button',
+			classList: ['btn', 'btn-primary'],
+			styles: { width: '100%' },
 			children: [
-				create('button', {
-					type: 'button',
-					classList: ['btn', 'btn-reject'],
-					children: [useSVG('x', {
-						width: 16,
-						height: 16,
-						fill: 'currentColor',
-						classList: ['icon']
-					})],
-					events: { click: ({ target }) => target.closest('dialog').close() },
-				}),
-				create('div', {
-					classList: ['status-box', 'error'],
-					text: err.message,
-				}),
-			]
+				useSVG('mark-location', { height: 20, width: 20, fill: 'currentColor', classList: ['icon'] }),
+				create('span', { text: 'Current Location' }),
+			],
+			events: {
+				click: async () => {
+					const { coords: { latitude, longitude }} = await getLocation({ enableHightAccuracy: true });
+					document.querySelector('leaflet-map').flyTo({ latitude, longitude });
+				},
+			}
+		}));
+	});
+} else if (location.pathname.startsWith('/contact')) {
+	on('#contact-form', 'submit', async event => {
+		event.preventDefault();
+		const data = new FormData(event.target);
+		const dialog = create('dialog', {
+			children: [
+				create('pre', {
+					children: [
+						create('code', {
+							text: JSON.stringify(Object.fromEntries(data.entries()), null, 4),
+						})
+					]
+				})
+			],
+			events: {
+				close: ({ target }) => target.remove(),
+			},
 		});
 
 		document.body.append(dialog);
 		dialog.showModal();
 	});
-
-	on('#install-btn', ['click'], () => new HTMLInstallPromptElement().show())
-		.forEach(el => el.hidden = false);
-
-	document.getElementById('sidebar').append(create('button', {
-		type: 'button',
-		classList: ['btn', 'btn-primary'],
-		styles: { width: '100%' },
-		children: [
-			useSVG('mark-location', { height: 20, width: 20, fill: 'currentColor', classList: ['icon'] }),
-			create('span', { text: 'Current Location' }),
-		],
-		events: {
-			click: async () => {
-				const { coords: { latitude, longitude }} = await getLocation({ enableHightAccuracy: true });
-				document.querySelector('leaflet-map').flyTo({ latitude, longitude });
-			},
-		}
-	}));
-});
+}

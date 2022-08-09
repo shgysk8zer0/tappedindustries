@@ -2,11 +2,14 @@
 /* eslint-env serviceworker */
 
 const config = {
-	version: '1.0.0-07-18-2022',
+	version: '1.0.0-08-08-2022',
 	fresh: [
 		'/',
 		'/manifest.json',
 		'/api/geo',
+		'/contact/',
+		'/store/',
+		'/map/',
 	].map(url => new URL(url, location.origin).href),
 	stale: [
 		/* HTML and Templates */

@@ -1,2 +1,9 @@
 dev:
-  - /js/index.js
+  - src: /js/index.js
+    type: module
+    referrerPolicy: no-referrer
+production:
+  - src: /js/index.min.js
+    type: application/javascript
+    defer: true
+    referrerPolicy: no-referrer
