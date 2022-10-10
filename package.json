@@ -64,7 +64,7 @@
     "version:bump:major": "npm version --no-git-tag-version patch"
   },
   "dependencies": {
-    "firebase-admin": "^11.0.1",
+    "firebase-admin": "^11.1.0",
     "netlify-js-app": "^2.0.0"
   }
 }
