@@ -65,6 +65,6 @@
   },
   "dependencies": {
     "firebase-admin": "^11.0.1",
-    "netlify-js-app": "^2.0.0"
+    "netlify-js-app": "^2.1.1"
   }
 }
